@@ -1,0 +1,33 @@
+services:
+  ddns:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tplink-aliyun-ddns:local
+    restart: unless-stopped
+    init: true
+    environment:
+      TPLINK_PASSWORD: ${TPLINK_PASSWORD:?请在 .env 中填写路由器密码}
+      ALIBABA_CLOUD_ACCESS_KEY_ID: ${ALIBABA_CLOUD_ACCESS_KEY_ID:?请在 .env 中填写 AccessKeyId}
+      ALIBABA_CLOUD_ACCESS_KEY_SECRET: ${ALIBABA_CLOUD_ACCESS_KEY_SECRET:?请在 .env 中填写 AccessKeySecret}
+      ALIBABA_CLOUD_SECURITY_TOKEN: ${ALIBABA_CLOUD_SECURITY_TOKEN:-}
+    volumes:
+      - type: bind
+        source: ./ddns_config.json
+        target: /config/ddns_config.json
+        read_only: true
+        bind:
+          create_host_path: false
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 32
+    mem_limit: 128m
+    stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -1,0 +1,40 @@
+{
+  "router": {
+    "url": "https://router.example.invalid",
+    "verify_ssl": false,
+    "password_env": "TPLINK_PASSWORD",
+    "encoded_password": false
+  },
+  "aliyun": {
+    "access_key_id_env": "ALIBABA_CLOUD_ACCESS_KEY_ID",
+    "access_key_secret_env": "ALIBABA_CLOUD_ACCESS_KEY_SECRET",
+    "ttl": 600
+  },
+  "interval_seconds": 60,
+  "reconcile_seconds": 1800,
+  "timeout_seconds": 10,
+  "maclist": [
+    {
+      "mac": "02:00:00:00:00:01",
+      "records": [
+        {
+          "domain": "example.com",
+          "rr": "nas"
+        },
+        {
+          "domain": "example.com",
+          "rr": "storage.home"
+        }
+      ]
+    },
+    {
+      "mac": "02:00:00:00:00:02",
+      "records": [
+        {
+          "domain": "example.com",
+          "rr": "pc"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+# 群晖专用完整配置，请单独使用；不与 compose.yaml 合并。
+# 不指定 logging，让容器继承宿主机日志驱动和保留策略。
+services:
+  ddns:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tplink-aliyun-ddns:local
+    restart: unless-stopped
+    init: true
+    environment:
+      TPLINK_PASSWORD: ${TPLINK_PASSWORD:?请在 .env 中填写路由器密码}
+      ALIBABA_CLOUD_ACCESS_KEY_ID: ${ALIBABA_CLOUD_ACCESS_KEY_ID:?请在 .env 中填写 AccessKeyId}
+      ALIBABA_CLOUD_ACCESS_KEY_SECRET: ${ALIBABA_CLOUD_ACCESS_KEY_SECRET:?请在 .env 中填写 AccessKeySecret}
+      ALIBABA_CLOUD_SECURITY_TOKEN: ${ALIBABA_CLOUD_SECURITY_TOKEN:-}
+    volumes:
+      - type: bind
+        source: ./ddns_config.json
+        target: /config/ddns_config.json
+        read_only: true
+        bind:
+          create_host_path: false
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 128m
+    stop_grace_period: 30s
